@@ -1,0 +1,12 @@
+{
+    "files.exclude": {
+        "**/*.js": {
+            "when": "$(basename).ts"
+        }
+    },
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/abb79e53-81e9-4907-91c5-f7a68e020ab7/resourceGroups/appsvc_rg_linux_centralus/providers/Microsoft.Web/sites/CountingSortClient",
+    "appService.deploySubpath": ""
+}

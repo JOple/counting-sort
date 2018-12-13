@@ -1,0 +1,102 @@
+<html>
+
+<head>
+    <title>Counting sort test client</title>
+    <script src="/js/jquery.js"></script>
+    <script src="/js/index.js"></script>
+
+    <link id="theme" rel="stylesheet" href="/css/code-style/xt256.css">
+    <script src="/js/highlight.pack.js"></script>
+
+    <script>
+        hljs.initHighlightingOnLoad();
+        osm.config.baseUrl = window.location.href
+    </script>
+</head>
+
+<body class="hljs" style="font-family: 'Courier New', Courier, monospace">
+    <h1 class="hljs-string">Open the command console <span class="hljs-comment">(Ctrl + Shift + I)</span></h1>
+    <h1 class="hljs-string">Access the 'osm' variable for testing functions</h1>
+
+    <h4 class="hljs-string">For initialization do:</h4>
+    <ul>
+        <li>
+            <pre><code class="typescript">osm.config.baseUrl="https://countingsortclient.azurewebsites.net"</code></pre>
+        </li>
+    </ul>
+
+    <h4 class="hljs-string">Documentation</h4>
+    <ul>
+        <li>
+            <pre><code class="typescript">osm // For general structure</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.config // Osm Config</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.arr // Array generators</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.sort // Array sort (ascending)</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.themes // An array of available stylesheet links</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.theme(link:string) // Set the theme stylesheet with link</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.execTime(fn:Function,...args:any[]):Promise&lt;number&gt; // Test the execution time of a function</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.rpc({sort?:string,arr?:"desc"|"asc"|"rand",n?:number,show?:boolean}):Promise&lt;any&gt; // Run a function in the server</code></pre>
+        </li>
+    </ul>
+
+    <h4 class="hljs-string">Array Generators</h4>
+    <ul>
+        <li>
+            <pre><code class="typescript">osm.arr.asc(n:number):number[] // Generates a list of ascending numbers from 1 to n</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.arr.desc(n:number):number[] // Generates a list of descending numbers from n to 1</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.arr.rand(n:number):number[] // Generates a list of randomly ordered numbers from 1 to n</code></pre>
+        </li>
+    </ul>
+
+    <h4 class="hljs-string">Number Sorters (ascending)</h4>
+    <ul>
+        <li>
+            <pre><code class="typescript">osm.sort.vanilla(arr:number[]):Promise&lt;number[]&gt; // Uses JavaScript built-in sort</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.sort.csortSeq(arr:number[]):Promise&lt;number[]&gt; // Uses sequential counting sort</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.sort.csortP2(arr:number[]):Promise&lt;number[]&gt; // Uses 2-threaded counting sort</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.sort.csortHttp(arr:number[]):Promise&lt;number[]&gt; // Uses server-supported counting sort</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.sort.csortHttpAllServer(arr:number[]):Promise&lt;number[]&gt; // Uses server-supported counting sort</code></pre>
+        </li>
+    </ul>
+
+    <h4 class="hljs-string">Example calls</h4>
+    <ul>
+        <li>
+            <pre><code class="typescript">osm.theme(osm.themes.#####) // Change theme</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.execTime(osm.sort.#####,osm.arr.desc(10000)).then(console.log) // Run the sorting algorithm in the browser</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.rpc({sort:osm.sort.#####.name,n:10000}).then(console.log) // Run the sorting algorithm in the server</code></pre>
+        </li>
+    </ul>
+</body>
+
+</html>
