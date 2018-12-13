@@ -143,6 +143,65 @@ export const ATC_B_HTTP: (uri: string) => (chunkSize: number) => ArrayToCount = 
     }
 }
 
+export const ATC_B_HTTP_HALFCLIENT_HALFSERVER: (uri: string) => (chunkSize: number) => (serverDist: number) => ArrayToCount = uri => {
+
+    async function asyncCount(arr: number[], s: number, e: number) {
+        return new Promise<void>(resolve => {
+            console.log("ATC_HTTP_HALFCLIENT_HALFSERVER Contacting", uri)
+            request.post(uri, {
+                body: JSON.stringify([...subarray(arr, s, e)]),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            }, (err, resp, body) => {
+                resolve()
+            })
+        })
+    }
+    async function getCounts() {
+        return new Promise<number[]>(resolve => {
+            request.get(uri, {
+                headers: {
+                    "Accept": "application/json"
+                }
+            }, (err, resp, body) => {
+                resolve(JSON.parse(body))
+            })
+        })
+    }
+
+    return chunkSize => serverDist => (arr, cb) => {
+        var totLen = arr.length
+        var serverLen = Math.floor(totLen * serverDist)
+        console.log("Server:", serverLen, "Client", totLen - serverLen)
+        if (serverLen > 1) {
+
+            // Server delegate code
+            var threads = Math.floor(serverLen / Math.min(chunkSize, serverLen))
+            var size = Math.ceil(serverLen / threads)
+            var countDone = 0
+
+            for (var i = 0; i < threads; i++) {
+                var start = i * size
+                var end = Math.min(start + size, serverLen)
+                asyncCount(arr, start, end).then(() => {
+                    countDone++
+                    if (countDone == threads) {
+                        getCounts().then(counts => {
+                            cb(counts, true)
+                        })
+                    }
+                })
+            }
+        }
+
+        // Client
+        var cliCount = count(arr, serverLen, totLen)
+        cb(cliCount, countDone == threads)
+    }
+}
+
 export const ATC_B_HTTPALLSERVER: (uri: string) => (chunkSize: number) => ArrayToCount = uri => {
 
     async function asyncCount(arr: number[], s: number, e: number) {

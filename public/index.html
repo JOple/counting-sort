@@ -10,7 +10,7 @@
 
     <script>
         hljs.initHighlightingOnLoad();
-        osm.config.baseUrl = window.location.href
+        osm.config.baseUrl = window.location.href.replace(new RegExp("/$"), "")
     </script>
 </head>
 
@@ -66,7 +66,16 @@
         </li>
     </ul>
 
-    <h4 class="hljs-string">Number Sorters (ascending)</h4>
+    <h4 class="hljs-string">Sorting Algorithm</h4>
+    <p class="hljs-string">Our parallel counting sort implementation has three parts:</p>
+    <ol class="hljs-string">
+        <li>Counting - <span class="hljs-comment"><span class="hljs-built_in">counts</span> the number of instances of
+                each number in the <span class="hljs-built_in">input</span> array</span></li>
+        <li>Consolidation - <span class="hljs-comment">in the case of parallel implementation, combine all the <span
+                    class="hljs-built_in">counts</span> of each <span class="hljs-built_in">process</span></span></li>
+        <li>Building - <span class="hljs-comment">produces the <span class="hljs-built_in">output</span> array from the
+                <span class="hljs-built_in">counts</span> array</span></li>
+    </ol>
     <ul>
         <li>
             <pre><code class="typescript">osm.sort.vanilla(arr:number[]):Promise&lt;number[]&gt; // Uses JavaScript built-in sort</code></pre>
@@ -78,10 +87,15 @@
             <pre><code class="typescript">osm.sort.csortP2(arr:number[]):Promise&lt;number[]&gt; // Uses 2-threaded counting sort</code></pre>
         </li>
         <li>
-            <pre><code class="typescript">osm.sort.csortHttp(arr:number[]):Promise&lt;number[]&gt; // Uses server-supported counting sort</code></pre>
+            <pre><code class="typescript">osm.sort.csortHttp(arr:number[]):Promise&lt;number[]&gt; // Uses server-supported counting sort (counting is done in the server)</code></pre>
         </li>
         <li>
-            <pre><code class="typescript">osm.sort.csortHttpAllServer(arr:number[]):Promise&lt;number[]&gt; // Uses server-supported counting sort</code></pre>
+            <pre><code class="typescript">osm.sort.csortHttpAllServer(arr:number[]):Promise&lt;number[]&gt; // Uses server-supported counting sort (counting and consolidation in server)</code></pre>
+        </li>
+        <li>
+            <pre><code class="typescript">osm.sort.csortHttpHalfServerHalfClient(arr:number[],dist:number):Promise&lt;number[]&gt;</code></pre>
+            <pre><code>// @arg dist:number - between 0 and 1, tells how much of the input array is sent to the server</code></pre>
+            <pre><code>// Uses server-supported counting sort (counting is shared between client and server)</code></pre>
         </li>
     </ul>
 

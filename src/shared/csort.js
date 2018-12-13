@@ -142,6 +142,63 @@ exports.ATC_B_HTTP = uri => {
         }
     };
 };
+exports.ATC_B_HTTP_HALFCLIENT_HALFSERVER = uri => {
+    function asyncCount(arr, s, e) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise(resolve => {
+                console.log("ATC_HTTP_HALFCLIENT_HALFSERVER Contacting", uri);
+                request_1.default.post(uri, {
+                    body: JSON.stringify([...utils_1.subarray(arr, s, e)]),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    }
+                }, (err, resp, body) => {
+                    resolve();
+                });
+            });
+        });
+    }
+    function getCounts() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise(resolve => {
+                request_1.default.get(uri, {
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }, (err, resp, body) => {
+                    resolve(JSON.parse(body));
+                });
+            });
+        });
+    }
+    return chunkSize => serverDist => (arr, cb) => {
+        var totLen = arr.length;
+        var serverLen = Math.floor(totLen * serverDist);
+        console.log("Server:", serverLen, "Client", totLen - serverLen);
+        if (serverLen > 1) {
+            // Server delegate code
+            var threads = Math.floor(serverLen / Math.min(chunkSize, serverLen));
+            var size = Math.ceil(serverLen / threads);
+            var countDone = 0;
+            for (var i = 0; i < threads; i++) {
+                var start = i * size;
+                var end = Math.min(start + size, serverLen);
+                asyncCount(arr, start, end).then(() => {
+                    countDone++;
+                    if (countDone == threads) {
+                        getCounts().then(counts => {
+                            cb(counts, true);
+                        });
+                    }
+                });
+            }
+        }
+        // Client
+        var cliCount = count(arr, serverLen, totLen);
+        cb(cliCount, countDone == threads);
+    };
+};
 exports.ATC_B_HTTPALLSERVER = uri => {
     function asyncCount(arr, s, e) {
         return __awaiter(this, void 0, void 0, function* () {

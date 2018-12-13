@@ -16,6 +16,9 @@ exports.sort = {
     csortHttp: (arr) => new Promise(resolve => {
         csort_1.ATC_B_HTTP(config_client_1.default.baseUrl + config_client_1.default.csortHttpPath)(config_client_1.default.csortHttpChunkSize)(arr, csort_1.CTA_GENERAL_ASC(resolve));
     }),
+    csortHttpHalfServerHalfClient: (arr, serverDist = 0.5, id = 2) => new Promise(resolve => {
+        csort_1.ATC_B_HTTP_HALFCLIENT_HALFSERVER(config_client_1.default.baseUrl + config_client_1.default.csortHttpAllServerPath + "/" + id)(config_client_1.default.csortHttpChunkSize)(serverDist)(arr, csort_1.CTA_GENERAL_ASC(resolve));
+    }),
     csortHttpAllServer: (arr, id = 1) => new Promise(resolve => {
         csort_1.ATC_B_HTTPALLSERVER(config_client_1.default.baseUrl + config_client_1.default.csortHttpAllServerPath + "/" + id)(config_client_1.default.csortHttpChunkSize)(arr, csort_1.CTA_SEQ_ASC(resolve));
     }),
